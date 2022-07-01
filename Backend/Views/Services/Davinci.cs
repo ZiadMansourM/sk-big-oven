@@ -3,6 +3,23 @@ namespace Backend.Views.Services;
 
 public class Davinci
 {
+    private static readonly Dictionary<string, Action> _recipeSelector = new Dictionary<string, Action>
+    {
+        ["List"] = Davinci.ListRecipes,
+        ["Get"] = Davinci.GetRecipe,
+        ["Create"] = Davinci.CreateRecipe,
+        ["Update"] = Davinci.UpdateRecipe,
+        ["Delete"] = Davinci.DeleteRecipe,
+    };
+    private static readonly Dictionary<string, Action> _categorySelector = new Dictionary<string, Action>
+    {
+        ["List"] = Davinci.ListCategories,
+        ["Get"] = Davinci.GetCategory,
+        ["Create"] = Davinci.CreateCategory,
+        ["Update"] = Davinci.UpdateCategory,
+        ["Delete"] = Davinci.DeleteCategory,
+    };
+
     public static void Setup(string name)
     {
         AnsiConsole.Write(
@@ -41,13 +58,14 @@ public class Davinci
     {
          string request = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-            .Title("About recipes, [green] pick what want?[/]")
+            .Title("About [red]recipes[/], [green] pick what want?[/]")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more Options)[/]")
             .AddChoices(new[] {
                 "List", "Get", "Create", "Update", "Delete"
             })
         );
+        _recipeSelector[request]();
     }
 
     public static void CategoriesMain()
@@ -61,5 +79,58 @@ public class Davinci
                 "List", "Get", "Create", "Update", "Delete"
             })
         );
+        _categorySelector[request]();
+    }
+
+    // Recipes
+    public static void ListRecipes()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void GetRecipe()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void CreateRecipe()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void UpdateRecipe()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void DeleteRecipe()
+    {
+        throw new NotImplementedException();
+    }
+
+    // Categories
+    public static void ListCategories()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void GetCategory()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void CreateCategory()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void UpdateCategory()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void DeleteCategory()
+    {
+        throw new NotImplementedException();
     }
 }
