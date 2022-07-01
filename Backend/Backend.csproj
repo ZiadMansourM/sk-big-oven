@@ -7,4 +7,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Models\" />
+    <None Remove="Views\" />
+    <None Remove="Controller\" />
+    <None Remove="Controller\Services\" />
+    <None Remove="Exceptions\" />
+    <None Remove="Views\Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Views\" />
+    <Folder Include="Controller\" />
+    <Folder Include="Controller\Services\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Views\Services\" />
+  </ItemGroup>
 </Project>
