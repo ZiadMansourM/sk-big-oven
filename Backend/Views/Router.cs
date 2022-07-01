@@ -1,11 +1,9 @@
-﻿using System;
-namespace Backend.Views
+﻿namespace Backend.Views;
+
+public class Router
 {
-    public class Router
+    public Router()
     {
-        public Router()
-        {
-        }
     }
 }
 
