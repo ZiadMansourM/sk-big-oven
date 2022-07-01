@@ -23,4 +23,7 @@
     <Folder Include="Exceptions\" />
     <Folder Include="Views\Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.44.0" />
+  </ItemGroup>
 </Project>

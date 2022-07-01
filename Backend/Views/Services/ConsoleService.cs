@@ -1,4 +1,5 @@
-﻿namespace Backend.Views.Services;
+﻿using Spectre.Console;
+namespace Backend.Views.Services;
 
 public class ConsoleService : IViewService
 {
@@ -11,7 +12,7 @@ public class ConsoleService : IViewService
 
     public void Run()
     {
-        Console.WriteLine(value: "Good Job ^^");
+        AnsiConsole.Markup("[underline red]Hello[/] World!");
     }
 }
 
