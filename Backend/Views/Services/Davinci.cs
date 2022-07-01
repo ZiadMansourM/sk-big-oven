@@ -3,7 +3,7 @@ namespace Backend.Views.Services;
 
 public class Davinci
 {
-    private static readonly Dictionary<string, Action> _recipeSelector = new Dictionary<string, Action>
+    private static readonly Dictionary<string, Action> _recipeSelector = new()
     {
         ["List"] = Davinci.ListRecipes,
         ["Get"] = Davinci.GetRecipe,
@@ -11,7 +11,7 @@ public class Davinci
         ["Update"] = Davinci.UpdateRecipe,
         ["Delete"] = Davinci.DeleteRecipe,
     };
-    private static readonly Dictionary<string, Action> _categorySelector = new Dictionary<string, Action>
+    private static readonly Dictionary<string, Action> _categorySelector = new()
     {
         ["List"] = Davinci.ListCategories,
         ["Get"] = Davinci.GetCategory,
