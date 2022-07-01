@@ -2,4 +2,5 @@
 
 public interface IViewService
 {
+    public void Run();
 }
