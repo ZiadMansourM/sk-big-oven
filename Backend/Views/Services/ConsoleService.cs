@@ -3,7 +3,7 @@
 public class ConsoleService : IViewService
 {
     private readonly Controller.Controller _controller;
-    private Dictionary<string, Action> _modeSelector;
+    private readonly Dictionary<string, Action> _modeSelector;
 
     public ConsoleService(Controller.Controller controller)
     {
@@ -18,8 +18,9 @@ public class ConsoleService : IViewService
 
     public void Run()
     {
+        Davinci.Init(_controller);
         Davinci.Setup("BigOven ...");
-        Davinci.WriteDivider("Talk to me ^^");
+        Davinci.WriteDivider("Talk to me ^^", true);
         while (true)
             _modeSelector[Davinci.GetMode()]();
     }

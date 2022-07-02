@@ -10,4 +10,9 @@ public class Category
         Id = Guid.NewGuid();
         Name = name;
     }
+
+    public List<Category> ToList()
+    {
+        return new List<Category>{this};
+    }
 }

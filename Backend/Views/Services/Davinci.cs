@@ -3,6 +3,7 @@ namespace Backend.Views.Services;
 
 public class Davinci
 {
+    private static Controller.Controller? _controller;
     private static readonly Dictionary<string, Action> _recipeSelector = new()
     {
         ["List"] = Davinci.ListRecipes,
@@ -20,6 +21,11 @@ public class Davinci
         ["Delete"] = Davinci.DeleteCategory,
     };
 
+    public static void Init(Controller.Controller controller)
+    {
+        _controller = controller;
+    }
+
     public static void Setup(string name)
     {
         AnsiConsole.Write(
@@ -31,14 +37,16 @@ public class Davinci
         );
     }
 
-    public static void WriteDivider(string text)
+    public static void WriteDivider(string text, bool center=false)
     {
         AnsiConsole.WriteLine();
-        AnsiConsole.Write(
-            new Rule($"[yellow]{text}[/]")
-            .RuleStyle("grey")
-            .LeftAligned()
-        );
+        var rule = new Rule($"[yellow]{text}[/]")
+            .RuleStyle("grey");
+        if(center)
+            rule = rule.Centered();
+        else
+            rule = rule.LeftAligned();
+        AnsiConsole.Write(rule);
     }
 
     public static string GetMode()
@@ -52,6 +60,30 @@ public class Davinci
                 "Recipes", "Categories", "Exit"
             })
         );
+    }
+
+    public static T Ask<T>(string question)
+    {
+        return AnsiConsole.Prompt<T>(
+            new TextPrompt<T>(question)
+            .PromptStyle("red")
+        );
+    }
+
+    public static void DrawCategories(List<Models.Category> categories, string message)
+    {
+        AnsiConsole.Write(
+            new Rule($"[yellow]{message}[/]")
+            .RuleStyle("grey")
+            .LeftAligned()
+        );
+        var table = new Table()
+            .AddColumns("[grey]Guid[/]", "[grey]Name[/]")
+            .RoundedBorder()
+            .BorderColor(Color.Grey);
+        foreach(Models.Category category in categories)
+            table = table.AddRow($"[grey]{category.Id}[/]", category.Name);
+        AnsiConsole.Write(table);
     }
 
     public static void RecipesMain()
@@ -111,26 +143,36 @@ public class Davinci
     // Categories
     public static void ListCategories()
     {
-        throw new NotImplementedException();
+        List<Models.Category> categories = _controller.ListCategories();
+        DrawCategories(categories, "Categories List");
     }
 
     public static void GetCategory()
     {
-        throw new NotImplementedException();
+        Guid id = Ask<Guid>("What's the Category [green]Guid?[/]");
+        Models.Category category = _controller.GetCategory(id);
+        DrawCategories(category.ToList(), "Here you are ^^");
     }
 
     public static void CreateCategory()
     {
-        throw new NotImplementedException();
+        string name = Ask<string>("What's the [green]Category name?[/]");
+        Models.Category category = _controller.CreateCategory(name);
+        DrawCategories(category.ToList(), "Created Successfully ^^");
     }
 
     public static void UpdateCategory()
     {
-        throw new NotImplementedException();
+        Guid id = Ask<Guid>("What's the Category [green]Guid?[/]");
+        string name = Ask<string>("What's the new [green]Name?[/]");
+        Models.Category category = _controller.UpdateCategory(id, name);
+        DrawCategories(category.ToList(), "Here you are ^^");
     }
 
     public static void DeleteCategory()
     {
-        throw new NotImplementedException();
+        Guid id = Ask<Guid>("What's the Category [green]Guid?[/]");
+        _controller.DeleteCategory(id);
+        DrawCategories(_controller.ListCategories(), "Done ^^");
     }
 }
