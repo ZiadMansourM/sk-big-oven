@@ -21,12 +21,12 @@ public class Controller
         return _service.GetRecipe(id);
     }
 
-    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Models.Category> categories)
+    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Guid> categories)
     {
         return _service.UpdateRecipe(id, name, ingredients, instructions, categories);
     }
 
-    public Models.Recipe CreateRecipe(string name, List<string> ingredients, List<string> instructions, List<Models.Category> categories)
+    public Models.Recipe CreateRecipe(string name, List<string> ingredients, List<string> instructions, List<Guid> categories)
     {
         return _service.CreateRecipe(name, ingredients, instructions, categories);
     }

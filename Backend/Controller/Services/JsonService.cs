@@ -4,43 +4,69 @@ namespace Backend.Controller.Services;
 
 public class JsonService : IService
 {
-    private readonly string _fileName;
+    private readonly string _fileNameCategories;
+    private readonly string _fileNameRecipes;
 
     public JsonService()
     {
-        _fileName = "Categories.json";
-        if (!File.Exists(_fileName))
-            File.WriteAllText(_fileName, "[]");
+        // Recipes
+        _fileNameRecipes = "Recipes.json";
+        if (!File.Exists(_fileNameRecipes))
+            File.WriteAllText(_fileNameRecipes, "[]");
+        // Categories
+        _fileNameCategories = "Categories.json";
+        if (!File.Exists(_fileNameCategories))
+            File.WriteAllText(_fileNameCategories, "[]");
     }
 
-    public void OverWrite(List<Models.Category> categories)
+    public void OverWriteCategories(List<Models.Category> categories)
     {
         string newString = JsonSerializer.Serialize(categories);
-        File.WriteAllText(_fileName, newString);
+        File.WriteAllText(_fileNameCategories, newString);
     }
 
-    public string Read()
+    public void OverWriteRecipes(List<Models.Recipe> recipes)
     {
-        return File.ReadAllText(_fileName);
+        string newString = JsonSerializer.Serialize(recipes);
+        File.WriteAllText(_fileNameRecipes, newString);
     }
 
-    public Models.Category Save(Models.Category category)
+    public string ReadCategories()
     {
-        string oldString = Read();
+        return File.ReadAllText(_fileNameCategories);
+    }
+
+    public string ReadRecipes()
+    {
+        return File.ReadAllText(_fileNameRecipes);
+    }
+
+    public Models.Category SaveCategories(Models.Category category)
+    {
+        string oldString = ReadCategories();
         List<Models.Category> categories = JsonSerializer.Deserialize<List<Models.Category>>(oldString)!;
         categories.Add(category);
-        OverWrite(categories);
+        OverWriteCategories(categories);
         return category;
+    }
+
+    public Models.Recipe SaveRecipes(Models.Recipe recipe)
+    {
+        string oldString = ReadRecipes();
+        List<Models.Recipe> recipes = JsonSerializer.Deserialize<List<Models.Recipe>>(oldString)!;
+        recipes.Add(recipe);
+        OverWriteRecipes(recipes);
+        return recipe;
     }
 
     public Models.Category CreateCategory(string name)
     {
-        return Save(new Models.Category(name));
+        return SaveCategories(new Models.Category(name));
     }
 
-    public Models.Recipe CreateRecipe(string name, List<string> ingredients, List<string> instructions, List<Models.Category> categories)
+    public Models.Recipe CreateRecipe(string name, List<string> ingredients, List<string> instructions, List<Guid> categoriesIds)
     {
-        throw new NotImplementedException();
+        return SaveRecipes(new Models.Recipe(name, ingredients, instructions, categoriesIds));
     }
 
     public void DeleteCategory(Guid id)
@@ -48,7 +74,7 @@ public class JsonService : IService
         List<Models.Category> categories = ListCategories();
         Models.Category category = categories.SingleOrDefault(c => c.Id == id)!;
         categories.Remove(category);
-        OverWrite(categories);
+        OverWriteCategories(categories);
     }
 
     public void DeleteRecipe(Guid id)
@@ -69,14 +95,16 @@ public class JsonService : IService
 
     public List<Models.Category> ListCategories()
     {
-        string jsonString = Read();
+        string jsonString = ReadCategories();
         List<Models.Category> categories = JsonSerializer.Deserialize<List<Models.Category>>(jsonString)!;
         return categories;
     }
 
     public List<Models.Recipe> ListRecipes()
     {
-        throw new NotImplementedException();
+        string jsonString = ReadRecipes();
+        List<Models.Recipe> recipes = JsonSerializer.Deserialize<List<Models.Recipe>>(jsonString)!;
+        return recipes;
     }
 
     public Models.Category UpdateCategory(Guid id, string name)
@@ -91,11 +119,11 @@ public class JsonService : IService
                 temp = category;
             }
         }
-        OverWrite(categories);
+        OverWriteCategories(categories);
         return temp;
     }
 
-    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Models.Category> categories)
+    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Guid> categoriesIds)
     {
         throw new NotImplementedException();
     }

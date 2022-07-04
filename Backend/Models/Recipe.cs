@@ -6,14 +6,19 @@ public class Recipe
     public string Name { get; set; }
     public List<string> Ingredients { get; set; }
     public List<string> Instructions { get; set; }
-    public List<Category> Categories { get; set; }
+    public List<Guid> CategoriesIds { get; set; }
 
-    public Recipe(string name, List<string> ingredients, List<string> instructions, List<Category> categories)
+    public Recipe(string name, List<string> ingredients, List<string> instructions, List<Guid> categoriesIds)
     {
         Id = Guid.NewGuid();
         Name = name;
         Ingredients = ingredients;
         Instructions = instructions;
-        Categories = categories;
+        CategoriesIds = categoriesIds;
+    }
+
+    public List<Recipe> ToList()
+    {
+        return new List<Recipe> { this };
     }
 }

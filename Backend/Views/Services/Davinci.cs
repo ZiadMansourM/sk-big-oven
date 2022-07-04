@@ -70,6 +70,23 @@ public class Davinci
         );
     }
 
+    public static List<string> AskMultiLine(string flag)
+    {
+        AnsiConsole.Markup($"What's the [green]recipe {flag}[/]?\n");
+        AnsiConsole.Markup("[grey](Press Enter to add continue adding or write DONE to exit)[/]");
+        List<string> flagList = new();
+        int i = 1;
+        while (true)
+        {
+            string input = AnsiConsole.Prompt(new TextPrompt<string>($"\n{i} - "));
+            if (input.ToUpper() == "DONE")
+                break;
+            flagList.Add(input);
+            i++;
+        }
+        return flagList;
+    }
+
     public static void DrawCategories(List<Models.Category> categories, string message)
     {
         AnsiConsole.Write(
@@ -83,6 +100,37 @@ public class Davinci
             .BorderColor(Color.Grey);
         foreach(Models.Category category in categories)
             table = table.AddRow($"[grey]{category.Id}[/]", category.Name);
+        AnsiConsole.Write(table);
+    }
+
+    public static void DrawRecipes(List<Models.Recipe> recipes, string message)
+    {
+        AnsiConsole.Write(
+            new Rule($"[yellow]{message}[/]")
+            .RuleStyle("grey")
+            .LeftAligned()
+        );
+        var table = new Table()
+            .AddColumns("[grey]Title[/]", "[grey]Ingredients[/]", "[grey]Instructions[/]", "[grey]Categories[/]")
+            .RoundedBorder()
+            .BorderColor(Color.Grey);
+        foreach (Models.Recipe recipe in recipes)
+        {
+            // Prepare data
+            List<Models.Category> categories = _controller.ListCategories();
+            Dictionary<Guid, string> categoriesDict = new();
+            foreach (Models.Category category in categories)
+                categoriesDict.Add(category.Id, category.Name);
+            List<string> categoryNames = new();
+            foreach (Guid guidId in recipe.CategoriesIds)
+                categoryNames.Add(categoriesDict[guidId]);
+            table = table.AddRow(
+                $"[grey]{recipe.Name}[/]",
+                String.Join("\n", recipe.Ingredients),
+                String.Join("\n", recipe.Instructions),
+                String.Join("\n", categoryNames)
+            );
+        }
         AnsiConsole.Write(table);
     }
 
@@ -117,7 +165,8 @@ public class Davinci
     // Recipes
     public static void ListRecipes()
     {
-        throw new NotImplementedException();
+        List<Models.Recipe> recipes = _controller.ListRecipes();
+        DrawRecipes(recipes, "Recipes List");
     }
 
     public static void GetRecipe()
@@ -127,9 +176,36 @@ public class Davinci
 
     public static void CreateRecipe()
     {
-        throw new NotImplementedException();
+        // [Get Title]
+        string name = Ask<string>("What's the [green]recipe name[/]?");
+        // [Get ingredients]
+        List<string> ingredients = AskMultiLine("ingredients");
+        // [Get instructions]
+        List<string> instructions = AskMultiLine("instructions");
+        // [get guids of categories]
+        List<Models.Category> categories = _controller.ListCategories();
+        DrawCategories(categories, "Categories List");
+        Dictionary<string, Guid> categoriesNames = new();
+        foreach (Models.Category category in categories)
+            categoriesNames.Add(category.Name, category.Id);
+        var Names = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>()
+            .Title("choose [green]categories[/]?")
+            .PageSize(10)
+            .MoreChoicesText("[grey](Move up and down to reveal more categories)[/]")
+            .InstructionsText(
+                "[grey](Press [blue]<space>[/] to toggle a category, " +
+                "[green]<enter>[/] to accept)[/]")
+            .AddChoices(categoriesNames.Keys.ToList())
+        );
+        List<Guid> GuidsList = new();
+        foreach (string n in Names)
+            GuidsList.Add(categoriesNames[n]);
+        // Create recipe
+        Models.Recipe recipe = _controller.CreateRecipe(name, ingredients, instructions, GuidsList);
+        DrawRecipes(recipe.ToList(), "Created Successfully ^^");
     }
-
+    
     public static void UpdateRecipe()
     {
         throw new NotImplementedException();
