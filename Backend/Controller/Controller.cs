@@ -21,9 +21,9 @@ public class Controller
         return _service.GetRecipe(id);
     }
 
-    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Guid> categories)
+    public Models.Recipe UpdateRecipe(List<Models.Recipe> recipes, int id)
     {
-        return _service.UpdateRecipe(id, name, ingredients, instructions, categories);
+        return _service.UpdateRecipe(recipes, id);
     }
 
     public Models.Recipe CreateRecipe(string name, List<string> ingredients, List<string> instructions, List<Guid> categories)
@@ -31,7 +31,7 @@ public class Controller
         return _service.CreateRecipe(name, ingredients, instructions, categories);
     }
 
-    public void DeleteRecipe(Guid id)
+    public void DeleteRecipe(int id)
     {
         _service.DeleteRecipe(id);
     }
@@ -42,12 +42,12 @@ public class Controller
         return _service.ListCategories();
     }
 
-    public Models.Category GetCategory(Guid id)
+    public Models.Category GetCategory(int id)
     {
         return _service.GetCategory(id);
     }
 
-    public Models.Category UpdateCategory(Guid id, string name)
+    public Models.Category UpdateCategory(int id, string name)
     {
         return _service.UpdateCategory(id, name);
     }
@@ -57,9 +57,15 @@ public class Controller
         return _service.CreateCategory(name);
     }
 
-    public void DeleteCategory(Guid id)
+    public void DeleteCategory(int id)
     {
         _service.DeleteCategory(id);
+    }
+
+    // Relation
+    public void DeleteCascade(int id)
+    {
+        _service.DeleteCascade(id);
     }
 }
 

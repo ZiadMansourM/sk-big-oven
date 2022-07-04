@@ -69,23 +69,23 @@ public class JsonService : IService
         return SaveRecipes(new Models.Recipe(name, ingredients, instructions, categoriesIds));
     }
 
-    public void DeleteCategory(Guid id)
+    public void DeleteCategory(int id)
     {
         List<Models.Category> categories = ListCategories();
-        Models.Category category = categories.SingleOrDefault(c => c.Id == id)!;
-        categories.Remove(category);
+        categories.Remove(categories[id-1]);
         OverWriteCategories(categories);
     }
 
-    public void DeleteRecipe(Guid id)
+    public void DeleteRecipe(int id)
     {
-        throw new NotImplementedException();
+        List<Models.Recipe> recipes = ListRecipes();
+        recipes.Remove(recipes[id - 1]);
+        OverWriteRecipes(recipes);
     }
 
-    public Models.Category GetCategory(Guid id)
+    public Models.Category GetCategory(int id)
     {
-        Models.Category category = ListCategories().FirstOrDefault(c => c.Id == id)!;
-        return category;
+        return ListCategories()[id-1];
     }
 
     public Models.Recipe GetRecipe(Guid id)
@@ -107,25 +107,28 @@ public class JsonService : IService
         return recipes;
     }
 
-    public Models.Category UpdateCategory(Guid id, string name)
+    public Models.Category UpdateCategory(int id, string name)
     {
         List<Models.Category> categories = ListCategories();
-        Models.Category temp = new("temp");
-        foreach (Models.Category category in categories)
-        {
-            if (category.Id == id)
-            {
-                category.Name = name;
-                temp = category;
-            }
-        }
+        categories[id-1].Name = name;
         OverWriteCategories(categories);
-        return temp;
+        return categories[id-1];
     }
 
-    public Models.Recipe UpdateRecipe(Guid id, string name, List<string> ingredients, List<string> instructions, List<Guid> categoriesIds)
+    public Models.Recipe UpdateRecipe(List<Models.Recipe> recipes, int id)
     {
-        throw new NotImplementedException();
+        OverWriteRecipes(recipes);
+        return recipes[id - 1];
+    }
+
+    public void DeleteCascade(int id)
+    {
+        Models.Category category = ListCategories()[id-1];
+        string jsonString = ReadRecipes();
+        List<Models.Recipe> recipes = JsonSerializer.Deserialize<List<Models.Recipe>>(jsonString)!;
+        foreach (Models.Recipe recipe in recipes)
+            recipe.CategoriesIds.Remove(category.Id);
+        OverWriteRecipes(recipes);
     }
 }
 
