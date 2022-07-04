@@ -1,3 +1,6 @@
+# user-defined
+**/appsettings.json
+
 # globs
 Makefile.in
 *.userprefs

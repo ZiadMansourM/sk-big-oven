@@ -14,6 +14,8 @@
     <None Remove="Controller\Services\" />
     <None Remove="Exceptions\" />
     <None Remove="Views\Services\" />
+    <None Remove="Microsoft.Extensions.Configuration" />
+    <None Remove="Microsoft.Extensions.Configuration.Json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -25,8 +27,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.44.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

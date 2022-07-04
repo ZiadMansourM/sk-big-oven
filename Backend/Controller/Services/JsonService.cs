@@ -7,14 +7,16 @@ public class JsonService : IService
     private readonly string _fileNameCategories;
     private readonly string _fileNameRecipes;
 
-    public JsonService()
+    public JsonService(string recipesPath, string categoriesPath)
     {
+        if(string.IsNullOrEmpty(recipesPath) || string.IsNullOrEmpty(categoriesPath))
+            throw new ArgumentException("Error in appsettings.json");
         // Recipes
-        _fileNameRecipes = "Recipes.json";
+        _fileNameRecipes = recipesPath;
         if (!File.Exists(_fileNameRecipes))
             File.WriteAllText(_fileNameRecipes, "[]");
         // Categories
-        _fileNameCategories = "Categories.json";
+        _fileNameCategories = categoriesPath;
         if (!File.Exists(_fileNameCategories))
             File.WriteAllText(_fileNameCategories, "[]");
     }
